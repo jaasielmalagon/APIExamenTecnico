@@ -1,5 +1,6 @@
 package com.example.APIExamenTecnico.service;
 
+import com.example.APIExamenTecnico.dto.CommentResponseDto;
 import com.example.APIExamenTecnico.dto.ShowSearchResponseDto;
 import com.example.APIExamenTecnico.dto.TvMazeSearchItemDto;
 import com.example.APIExamenTecnico.model.ShowCache;
@@ -15,11 +16,12 @@ public class ShowService {
 
     private final RestTemplate restTemplate;
     private final ShowCacheRepository showCacheRepository;
+    private final CommentService commentService;
 
-    public ShowService(RestTemplate restTemplate, ShowCacheRepository showCacheRepository
-    ) {
+    public ShowService(RestTemplate restTemplate, ShowCacheRepository showCacheRepository, CommentService commentService) {
         this.restTemplate = restTemplate;
         this.showCacheRepository = showCacheRepository;
+        this.commentService = commentService;
     }
     // A & A-2: Búsqueda de shows enriquecida con comentarios
     public List<ShowSearchResponseDto> searchShows(String query) {
@@ -41,12 +43,16 @@ public class ShowService {
                 channel = show.getWebChannel().getName();
             }
 
+            // C- Endpoint comments: Obtiene comentarios asociados desde MongoDB
+            List<CommentResponseDto> comments = commentService.getCommentsByShowId(show.getId());
+
             return ShowSearchResponseDto.builder()
                     .id(show.getId())
                     .name(show.getName())
                     .channel(channel)
                     .summary(show.getSummary())
                     .genres(show.getGenres())
+                    .comments(comments)
                     .build();
         }).collect(Collectors.toList());
     }
