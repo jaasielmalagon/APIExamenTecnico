@@ -3,12 +3,10 @@ package com.example.APIExamenTecnico.controller;
 import com.example.APIExamenTecnico.dto.ShowSearchResponseDto;
 import com.example.APIExamenTecnico.service.ShowService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping
@@ -24,5 +22,15 @@ public class ShowController {
     @GetMapping("/search")
     public ResponseEntity<List<ShowSearchResponseDto>> searchShows(@RequestParam("search_query") String searchQuery) {
         return ResponseEntity.ok(showService.searchShows(searchQuery));
+    }
+
+    // Endpoint B, B-2 & B-3: Obtener información del show por ID
+    @GetMapping("/shows/{show_id}")
+    public ResponseEntity<Map<String, Object>> getShowById(@PathVariable("show_id") Long showId) {
+        Map<String, Object> show = showService.getShowById(showId);
+        if (show == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(show);
     }
 }

@@ -46,4 +46,14 @@ public class ShowService {
                     .build();
         }).collect(Collectors.toList());
     }
+
+    // B, B-2 & B-3: Obtener show con caché en MongoDB Atlas y comentarios agregados
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getShowById(Long showId) {
+        Map<String, Object> showDataMap;
+        //Consumir API externa buscando el show por id
+        String url = "https://api.tvmaze.com/shows/" + showId;
+        showDataMap = restTemplate.getForObject(url, Map.class);
+        return showDataMap;
+    }
 }
