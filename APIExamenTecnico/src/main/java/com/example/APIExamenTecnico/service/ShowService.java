@@ -84,6 +84,12 @@ public class ShowService {
             }
         }
 
+        // 4. Agregar lista de comentarios guardados
+        if (showDataMap != null) {
+            List<CommentResponseDto> comments = commentService.getCommentsByShowId(showId);
+            showDataMap.put("comments", comments);
+        }
+
         return showDataMap;
     }
 }
